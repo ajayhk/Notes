@@ -1,1 +1,2 @@
 # cppbook
+Contains C++ collateral
