@@ -1,5 +1,36 @@
 
 
+List initialization of variables of built-in type not alloved if there is loss of info
+
+long double ld = 3.14;
+int a{ld}, b = {ld}; // error: narrowing conversion required
+int c(ld), d = ld;   // ok: but value will be truncated
+
+Built-in variables defined outside any function body are initilaized to zero
+Built-in variables defined in function are uninitialized
+
+A compound type is a type that is defined in terms of another type. E.g. References and pointers
+
+References can be lvalue reference or rvalue reference
+Usually references are lvalue references and can be considered as alternate name for an object
+At initialization the reference is bind to its initial object.
+Because references are not objects, we cannot bind a reference to another reference
+
+Pointers point to another object
+Pointers need not be initialized at definition
+Pointers are objects in their own right
+Pointers can point to multiple objects over time
+
+
+
+
+
+
+
+
+
+
+
 
 
 l-value are those that take an address. If a pointer can point to it, then its an l value

@@ -1,2 +1,1 @@
-# cppbook
-Contains C++ collateral
+Notes, links and collateral from various technical domains
