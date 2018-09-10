@@ -6,32 +6,81 @@ long double ld = 3.14;
 int a{ld}, b = {ld}; // error: narrowing conversion required
 int c(ld), d = ld;   // ok: but value will be truncated
 
+**********
+
 Built-in variables defined outside any function body are initilaized to zero
 Built-in variables defined in function are uninitialized
-
+**********
 A compound type is a type that is defined in terms of another type. E.g. References and pointers
-
+**********
 References can be lvalue reference or rvalue reference
 Usually references are lvalue references and can be considered as alternate name for an object
 At initialization the reference is bind to its initial object.
 Because references are not objects, we cannot bind a reference to another reference
-
+**********
 Pointers point to another object
 Pointers need not be initialized at definition
 Pointers are objects in their own right
 Pointers can point to multiple objects over time
+**********
+When we do int* p; int* is not the type. The type is int and variable is *p
+int* p1, p2; // p1 is a pointer to int; p2 is an int
+**********
+Reading complex declaration
+int *&r = p;   // r is a reference to the pointer p
+Read from right to left. & shows that r is a reference. * shows it is a reference to a pointer
+The int shows it is a reference to a pointer of type int
+
+Similarly
+const double *const pip = &pi; // pip is a const pointer to a const object
+The pointer const is called top level const and object's const is called low level const
+**********
+To define a single instance of a const variable use extern in both the definition and declarations
+**********
+The last one is an error because when that binding happens it refers to a temporary which is
+created just for this assignment by the compiler. So trying to change value of temporary 
+doesnt make sense as it is never refered.
+
+int i = 42;
+const int &r1 = i;      // we can bind a const int& to a plain int object
+const int &r2 = 42;     // ok: r1 is a reference to const
+const int &r3 = r1 * 2; // ok: r3 is a reference to const
+int &r4 = r * 2;        // error: r4 is a plain, non const reference
+
+**********
+You can do a const reference to a non-const variable
+Only restriction is that you cannot change the variable through the const reference
+**********
+We can ask the compiler to verify that a variable is a constant expression by declaring the variable in a constexpr declaration.
+constexpr int sz = size();    // ok only if size is a constexpr function
+Be careful that here q is the const pointer
+constexpr int *q = nullptr; // q is a const pointer to int
+Function variables usually cannot be constexpr since they not stored at a fixed address
+**********
+Type alias: Two ways
+typedef double price;
+using price = double; // alias declaration
+**********
+Surprising results with using const and typedef
+typedef char *pstring;
+const pstring cstr = 0; // cstr is a constant pointer to char
+const pstring *ps;      // ps is a pointer to a constant pointer to char
+**********
+auto automatically deduces the type from how it was initialized
+However auto ignores the top-level const
+To explicitly make it const, add const
+const auto f = ci; // deduced type of ci is int; f has type const int
+Same for reference
+auto &r = ci; // r is a const int& that is bound to ci
+**********
+decltype returns the type of operand without evaluating the expression
+decltype(f()) sum = x; // sum has whatever type f returns
+decltype of a parenthesized variable is always a reference because the compiler
+will evaulate the operand as an expression
+decltype((i)) d = 5; 
 
 
-
-
-
-
-
-
-
-
-
-
+**********
 
 l-value are those that take an address. If a pointer can point to it, then its an l value
 Examples are variable names and function names
@@ -39,10 +88,10 @@ r-values are those that dont take an address. Examples are literals (5, 20) and 
 As a result. till C++11, the function return value was copied into the variable name
 With move, the function return is now moved to the variable
 val = foo();
-
+**********
 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
 Basically ‘const’ applies to whatever is on its immediate left (other than if there is nothing there in which case it applies to whatever is its immediate right).
-
+**********
 https://en.cppreference.com/w/cpp/language/raii
 Resource Acquisition Is Initialization or RAII, is a C++ programming technique[1][2] which binds the life cycle of a resource that must be acquired before use (allocated heap memory, thread of execution, open socket, open file, locked mutex, disk space, database connection—anything that exists in limited supply) to the lifetime of an object.
 
@@ -59,7 +108,7 @@ has lifetime that is bounded by the lifetime of an automatic or temporary object
 Move semantics make it possible to safely transfer resource ownership between objects, across scopes, and in and out of threads, while maintaining resource safety.
 
 Classes with open()/close(), lock()/unlock(), or init()/copyFrom()/destroy() member functions are typical examples of non-RAII classes:
-
+**********
 
 
 
