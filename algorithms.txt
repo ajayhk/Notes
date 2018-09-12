@@ -7,5 +7,21 @@ T(n) = O(f(n))
 if and only if there exist a constant c, n0 such that
 T(n) <= c.f(n) for all n >= n0
 
+If T(n) = a1.n^k + a2.n^k-1.....+ax.n + ay
+Prove that T(n) = O(n^k)
+That means prove that T(n) <= c.n^k
+Consider c = a1 + a2 + ... ay
+Consider that n0 = 1
+T(n) <= a1.n^k + a2.n^k .....+ax.n^k + ay.n^k
+T(n) <= n^k.(a1+a2...ay)
+T(n) <= c.n^k thus T(n) = O(n^k)
 
+Big O <=
+Omega >=
+T(n) = Ω(f(n))
+T(n) >= c.f(n)
+Theta =
+T(n) = θ(f(n)) and is only possible when T(n) = O(f(n)) and T(n) = Ω(f(n)).
+This means T(n) = θ(f(n)) means that c1.f(n) <= T(n) <= c2.f(n) for all n >= n0
+Little o is more stringent and means for all constants, T(n) <= c.f(n) for all n >= n0
 
