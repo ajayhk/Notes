@@ -78,10 +78,52 @@ decltype(f()) sum = x; // sum has whatever type f returns
 decltype of a parenthesized variable is always a reference because the compiler
 will evaulate the operand as an expression
 decltype((i)) d = 5; 
+**********
+string s4(10, 'c');   // s4 is cccccccccc
+**********
+Direct and copy forms of initialization
+When = is used, it is copy init. When = is omitted, it is direct initialization
+In cases of multiple values being initialized, only direct init is possible.
+
+For vectors, multiple values can only be initialized using list init {} and not ()
+vector<string> v1{"a", "an", "the"};  // list initialization
+vector<string> v2("a", "an", "the");  // error
+
+Value initialization
+vector<int> ivec(10);
+We cannot use copy when value initializating
+With value initialization, we always need to provide explicit initializer
+When providing an element count, have to use direct form of initialization
+**********
+vector<int> v1(10);    // v1 has ten elements with value 0
+vector<int> v2{10};    // v2 has one element with value 10
+vector<int> v3(10, 1); // v3 has ten elements with value 1
+vector<int> v4{10, 1}; // v4 has two elements with values 10 and 1
+
+**********
+To read in an entire line, use getline(cin, line);
+getline returns the cin, so we can do things like while(getline(cin, line)) {}
+**********
+Range based for
+for(declaration: expression) 
+    statement;
+**********
+Vector is a template, not a type. vector<int> is a type
+**********
+Iterator:
+vector<int>::iterator it; // it can read and write vector<int> elements
+vector<int>::const_iterator it3; // it3 can read but not write elements
+cbegin and cend provide const_iterator
+
+
+
+
+
+
+
 
 
 **********
-
 l-value are those that take an address. If a pointer can point to it, then its an l value
 Examples are variable names and function names
 r-values are those that dont take an address. Examples are literals (5, 20) and function return values
@@ -109,6 +151,40 @@ Move semantics make it possible to safely transfer resource ownership between ob
 
 Classes with open()/close(), lock()/unlock(), or init()/copyFrom()/destroy() member functions are typical examples of non-RAII classes:
 **********
+
+
+Iterator operations
+*iter
+iter->mem // Fetches mem which is a member data structure
+++iter and --iter
+==, !=, 
+Iterator arethmetic (additional for string and vector)
+iter+n, iter-n, iter+=n, iter1-iter2, >, >=, <, <=
+
+
+**********
+String:
+init:
+
+functions:
+getine(), size(), empty()
+size_type
+Character:
+isalnum(c), isalpha(), iscntrl(), isdigit, isgraph, islower, ispunct, isspace, isupper, isxdigit, tolower/upper
+**********
+Vector:
+init:
+vector<int> v1(10);    // v1 has ten elements with value 0
+vector<int> v2{10};    // v2 has one element with value 10
+vector<int> v3(10, 1); // v3 has ten elements with value 1
+vector<int> v4{10, 1}; // v4 has two elements with values 10 and 1
+functions:
+push_back(t)    // Puts t as last element in vector
+empty()         // Returns true if empty
+size()         // Returns the number of elements
+
+
+
 
 
 

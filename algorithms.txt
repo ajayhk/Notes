@@ -1,0 +1,11 @@
+
+Asymptotic analysis:
+Ignore constant factors and lower-order terms
+
+Big-O notation
+T(n) = O(f(n))
+if and only if there exist a constant c, n0 such that
+T(n) <= c.f(n) for all n >= n0
+
+
+
