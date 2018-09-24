@@ -1,6 +1,7 @@
 
 
-List initialization of variables of built-in type not alloved if there is loss of info
+List initialization of variables of built-in type not alloved if there is
+loss of info
 
 long double ld = 3.14;
 int a{ld}, b = {ld}; // error: narrowing conversion required
@@ -11,12 +12,15 @@ int c(ld), d = ld;   // ok: but value will be truncated
 Built-in variables defined outside any function body are initilaized to zero
 Built-in variables defined in function are uninitialized
 **********
-A compound type is a type that is defined in terms of another type. E.g. References and pointers
+A compound type is a type that is defined in terms of another type.
+E.g. References and pointers
 **********
 References can be lvalue reference or rvalue reference
-Usually references are lvalue references and can be considered as alternate name for an object
+Usually references are lvalue references and can be considered as alternate 
+name for an object
 At initialization the reference is bind to its initial object.
-Because references are not objects, we cannot bind a reference to another reference
+Because references are not objects, we cannot bind a reference
+to another reference
 **********
 Pointers point to another object
 Pointers need not be initialized at definition
@@ -28,18 +32,21 @@ int* p1, p2; // p1 is a pointer to int; p2 is an int
 **********
 Reading complex declaration
 int *&r = p;   // r is a reference to the pointer p
-Read from right to left. & shows that r is a reference. * shows it is a reference to a pointer
+Read from right to left. & shows that r is a reference. * shows it is a
+reference to a pointer
 The int shows it is a reference to a pointer of type int
 
 Similarly
 const double *const pip = &pi; // pip is a const pointer to a const object
-The pointer const is called top level const and object's const is called low level const
+The pointer const is called top level const and object's const is called
+low level const
 **********
-To define a single instance of a const variable use extern in both the definition and declarations
+To define a single instance of a const variable use extern in both the
+definition and declarations
 **********
-The last one is an error because when that binding happens it refers to a temporary which is
-created just for this assignment by the compiler. So trying to change value of temporary 
-doesnt make sense as it is never refered.
+The last one is an error because when that binding happens it refers to a
+temporary which is created just for this assignment by the compiler.
+So trying to change value of temporary doesnt make sense as it is never refered
 
 int i = 42;
 const int &r1 = i;      // we can bind a const int& to a plain int object
@@ -49,13 +56,15 @@ int &r4 = r * 2;        // error: r4 is a plain, non const reference
 
 **********
 You can do a const reference to a non-const variable
-Only restriction is that you cannot change the variable through the const reference
+Only restriction is that you cannot change variable through the const reference
 **********
-We can ask the compiler to verify that a variable is a constant expression by declaring the variable in a constexpr declaration.
+We can ask the compiler to verify that a variable is a constant expression
+by declaring the variable in a constexpr declaration.
 constexpr int sz = size();    // ok only if size is a constexpr function
 Be careful that here q is the const pointer
 constexpr int *q = nullptr; // q is a const pointer to int
-Function variables usually cannot be constexpr since they not stored at a fixed address
+Function variables usually cannot be constexpr since they not stored at a
+fixed address
 **********
 Type alias: Two ways
 typedef double price;
@@ -85,7 +94,8 @@ Direct and copy forms of initialization
 When = is used, it is copy init. When = is omitted, it is direct initialization
 In cases of multiple values being initialized, only direct init is possible.
 
-For vectors, multiple values can only be initialized using list init {} and not ()
+For vectors, multiple values can only be initialized using
+list init {} and not ()
 vector<string> v1{"a", "an", "the"};  // list initialization
 vector<string> v2("a", "an", "the");  // error
 
@@ -114,8 +124,101 @@ Iterator:
 vector<int>::iterator it; // it can read and write vector<int> elements
 vector<int>::const_iterator it3; // it3 can read but not write elements
 cbegin and cend provide const_iterator
+**********
+Array init with constexpr possible. Not with non-const
+constexpr int sz = 10;
+int a[sz];
 
+We cannot use auto to deduce the type of array from a list of initializers.
+Elements are default initialized
+int a3[5] = {0, 1, 2};        // equivalent to a3[] = {0, 1, 2, 0, 0}
+**********
+List initializing an array with characters requires an explicit null 
+char a1[] = {'C', '+', '+'};       // list initialization, no null
+char a2[] = {'C', '+', '+', '\0'}; // list initialization, explicit null
+char a3[] = "C++";                 // null terminator added automatically
+const char a4[6] = "Daniel";       // error: no space for the null!
+Array assignment should be avoided
+**********
+size_t is an unsigned type thta is guaranteed to be large enough to hold the
+size of any object in memory. It is defined in cstddef, C++ version of stddef.h
+**********
+Compiler usually creates a pointer to first element when we define an array.
+As a result
+int oldarr[10];
+auto arr(oldarr);   // arr is a pointer to first element of oldarr
+Treats it as auto arr(&oldarr[0]);
+arr = 10;       // Error as cannot allocate int to ptr
+However decltype defines it to be of array of int type
+decltype(oldarr) arr2;
+arr2 = p;       // Error, arr2 is an array and cant assign an int pointer to it
+We can take an off-the-end pointer as follows
+int *e = &arr[10];  // This is equivalent to vector.end()
+Cannot increment or dereference it
+The library includes two fns begin and end to access first and one past last
+**********
 
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
+
+**********
 
 
 
@@ -124,18 +227,23 @@ cbegin and cend provide const_iterator
 
 
 **********
-l-value are those that take an address. If a pointer can point to it, then its an l value
+l-value are those that take an address. If a pointer can point to it,
+then its an l value
 Examples are variable names and function names
-r-values are those that dont take an address. Examples are literals (5, 20) and function return values
-As a result. till C++11, the function return value was copied into the variable name
+r-values are those that dont take an address. Examples are literals (5, 20)
+and function return values
+As a result. till C++11, the function return value was copied into the
+variable name
 With move, the function return is now moved to the variable
 val = foo();
 **********
 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
-Basically ‘const’ applies to whatever is on its immediate left (other than if there is nothing there in which case it applies to whatever is its immediate right).
+Basically ‘const’ applies to whatever is on its immediate left (other than
+if there is nothing there in which case it applies to whatever is its immediate right).
 **********
 https://en.cppreference.com/w/cpp/language/raii
-Resource Acquisition Is Initialization or RAII, is a C++ programming technique[1][2] which binds the life cycle of a resource that must be acquired before use (allocated heap memory, thread of execution, open socket, open file, locked mutex, disk space, database connection—anything that exists in limited supply) to the lifetime of an object.
+Resource Acquisition Is Initialization or RAII, is a C++ programming
+technique[1][2] which binds the life cycle of a resource that must be acquired before use (allocated heap memory, thread of execution, open socket, open file, locked mutex, disk space, database connection—anything that exists in limited supply) to the lifetime of an object.
 
 RAII guarantees that the resource is available to any function that may access the object (resource availability is a class invariant, eliminating redundant runtime tests). It also guarantees that all resources are released when the lifetime of their controlling object ends, in reverse order of acquisition. Likewise, if resource acquisition fails (the constructor exits with an exception), all resources acquired by every fully-constructed member and base subobject are released in reverse order of initialization. This leverages the core language features (object lifetime, scope exit, order of initialization and stack unwinding) to eliminate resource leaks and guarantee exception safety. Another name for this technique is Scope-Bound Resource Management (SBRM), after the basic use case where the lifetime of an RAII object ends due to scope exit.
 

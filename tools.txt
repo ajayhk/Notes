@@ -1,0 +1,77 @@
+Brew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+brew install package
+
+**********
+Tmux:
+brew install tmux
+tmux new
+ctrl+b          # for command prompt
+ctrl+b d        # for detach
+tmux ls         # for listing all sessions
+tmux a          # for last session
+tmux new -s [name of session]
+tmux a -t session_name
+ctrl+b "        # to split pane horizontally
+ctrl+b %        # to split pane vertically
+ctrl+b arrow    # to move from pane to pane
+# To resize a pane
+ctrl+b :
+resize-pane -D 2
+
+tmux kill-session -t [name of session]
+ctrl+b x        # kill current pane
+tmux kill-server# kill all panes + server
+
+Ctrl+b c — (c)reate a new window.
+Ctrl+b n — move to the (n)ext window.
+Ctrl+b p — move to the (p)revious window.
+
+https://linuxize.com/post/getting-started-with-tmux/
+https://leanpub.com/the-tao-of-tmux/read
+https://medium.com/actualize-network/a-minimalist-guide-to-t...
+https://blog.bugsnag.com/benefits-of-using-tmux/
+https://gist.github.com/MohamedAlaa/2961058
+
+
+**********
+
+
+**********
+#!/bin/sh
+# Uncomment the following two lines for normal desktop:
+
+unset SESSION_MANAGER
+#exec /etc/X11/xinit/xinitrc
+
+gnome-session --session=gnome-classic &
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources
+
+xsetroot -solid grey
+vncconfig -iconic &
+
+#x-terminal-emulator -geometry 1280x1024+10+10 -ls -title "$VNCDESKTOP Desktop" &
+#x-window-manager &
+
+https://askubuntu.com/questions/172384/vnc-grey-screen-and-start-on-boot-12-04
+
+
+**********
+
+
+
+**********
+
+
+**********
+
+
+**********
+**********
+
+
+
+
+
