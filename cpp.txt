@@ -157,7 +157,27 @@ int *e = &arr[10];  // This is equivalent to vector.end()
 Cannot increment or dereference it
 The library includes two fns begin and end to access first and one past last
 **********
-
+We cannot initialize an array as a copy of another array, nor is it legal to
+assign one array to another
+**********
+When reading declarations, read from inside out followed by right to left
+int *ptrs[10];            //  ptrs is an array of ten pointers to int
+int &refs[10] = /* ? */;  //  error: no arrays of references
+int (*Parray)[10] = &arr; //  Parray points to an array of ten ints
+int (&arrRef)[10] = arr;  //  arrRef refers to an array of ten ints
+**********
+A static_cast removes warning about loss of information. Static cast is
+useful for cases where the compiler will not generate convertion automatically
+const_cast converts a const object to a nonconst type. However writing to
+that const object is undefined. If it was originally not a const, it is fine
+const int *cip;
+int *ip = const_cast<int*>(cip);
+reinterpret_cast performas a low-level reimnterpretation of bit pattern
+of the operand
+int *ip;
+char *cp = reinterpret_cast<char*>(ip);
+**********
+3.5.4.-5.6.1
 **********
 
 **********
@@ -179,15 +199,29 @@ The library includes two fns begin and end to access first and one past last
 **********
 
 **********
+qsort
 
+int values[] = { 40, 10, 100, 90, 20, 25 };
+int compare (const void * a, const void * b)
+{
+  return ( *(int*)a - *(int*)b );
+}
+qsort (values, 6, sizeof(int), compare);
 **********
+std::sort
+bool myfunction (int i,int j) { return (i<j); }
 
-**********
+struct myclass {
+  bool operator() (int i,int j) { return (i<j);}
+} myobject;
+// using default comparison (operator <):
+std::sort (myvector.begin(), myvector.begin()+4);
 
-**********
+// using function as comp
+std::sort (myvector.begin()+4, myvector.end(), myfunction);
 
-**********
-
+// using object as comp
+std::sort (myvector.begin(), myvector.end(), myobject);
 **********
 
 **********
