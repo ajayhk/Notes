@@ -59,8 +59,116 @@ https://askubuntu.com/questions/172384/vnc-grey-screen-and-start-on-boot-12-04
 
 
 **********
+vi
+http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html
+:sp <filename> to split window
+:vsp for vertical split
+Ctrl-w arrow key to move from window to window
+Ctrl-w + or - to increase or reduce window size
+Ctrl-w _ to quickly maximize the current window
+Ctrl-w = to equal size all windows
++[num]	Open editor with cursor on line "num". If "num" is not specified, the cursor will be on the last line of the file.
++/{pat}	Open editor with cursor on the first occurrence of {pat}.
+-c {command}
+--cmd {command}	A "ex" command in dowble quotes will be processed against the file specified.
+-b	Binary file mode.
+-d	Diff file mode. Must list all files to perform a diff upon (list 2, 3 or 4 files). Same as vimdiff.
+-i filename	Specify viminfo file. Default is ~/.viminfo
+-r
+-L	Recovery mode. Used after a crash. The ".swp" file is used. See ":help recovery".
+-x	Use encryption when writing files. Will prompt for a crypt key.
+spacebar	Move cursor right one space
+-/+	Move cursor down/up in first column
+ctrl-d
+n ctrl-d	Scroll down one half of a screen.
+Set scroll to "n" lines. New default set for half screen.
+ctrl-u
+n ctrl-u	Scroll up one half of a screen
+Set scroll to "n" lines. New default set for half screen.
+ctrl-f
+n ctrl-f	Scroll forward one screen
+Scroll forward "n" screen
+ctrl-b
+n ctrl-b	Scroll back one screen
+Scroll back "n" screen
+ctrl-y
+n ctrl-y	Scroll forward one line
+Scroll forward "n" lines
+ctrl-e
+n ctrl-e	Scroll back one line
+Scroll back "n" lines
+W
+w
+5w	Move cursor a word at a time (white space delimited)
+Move cursor a word at a time (first non-alphanumeric)
+Move cursor ahead 5 words
+B
+b
+5b	Move cursor back a word at a time (white space delimited)
+Move cursor back a word at a time (first non-alphanumeric)
+Move cursor back 5 words
+0 (zero)	Move cursor to beginning of line
+:30	Move cursor to line thirty
+$	Move cursor to end of line
+)	Move cursor to beginning of next sentence (delimeted by ".", "?" or "!")
+(	Move cursor to beginning of current sentence
+}	Move cursor to beginning of next paragraph (delimeted by blank line or nroff macros: .IP, .LP, .PP, .QP, .P, .LI and .bp) Also see "set paragraphs" to define a paragraph.
+{	Move cursor to beginning of current paragraph
+o	Open a new line below the current cursor position. Also puts you in insert mode. Must use esc key to terminate insert mode.
+O	Above
+D	Delete contents of line after cursor
+C	Delete contents of line after cursor and insert new text. Press esc key to end insertion.
+dw	Delete word
+4dw Delete 4 words
+d) Delete to end of sentence
+d$ Delete all characters from cursor to end of line
+d- Delete current and previous line
+dfx Delete from cursor to first occurance of the letter "x"
+d'x Delete from the current line to the line marked with the identifier "x"
+d/cat Delete all characters from the cursor to the next occurance of (but not including) "cat"
+/search_string{CR}	Search for search_string
+?search_string{CR}	Search backwards (up in file) for search_string
+/\<search_string\>{CR}	Search for search_word
+    .	A period matches any single character
+    [abc]	Matches a string which contains any of the letters (a, b or c) between the brackets
+    string1|string2	Match any either string 1 or string 2
 
 
+n	Find next occurrence of search_word
+N	Find previous occurrence of search_word
+\/c<string> searches case insensitive
+ctrl-g  List file info: fine name, number of lines in file, position of cursor in file.
+:set list Show tabs and end of line markers
+:set nolist	Turn of tab and eol markings
+Use command line: ":w filename"
+Use command: ":e filename" Start new edit session on specified file name without closing current vi / vim editor process.
+:set eb and :set noeb	Silence error beep
+:set number :set nonumber	:set nu :set nonu	Display line numbers
+:set syntax on :set syntax off
+:set wrapscan :set nowrapscan	:set ws
+:set list :set nolist	 Display all Tabs and Ends of lines (Dislays these hidden characters).
+:set bg=dark :set bg=light VIM: choose color scheme for "dark" or "light" console background.
+
+vim: Shift a block of code left or right:
+    Enter into visual mode by typing the letter "v" at the top (or bottom) of the block of text to be shifted.
+    Move the cursor to the bottom (or top) of the block of text using "j", "k" or the arrow keys.
+    Tip: Select from the first collumn of the top line and the last character of the line on the bottom line.
+    Zero ("0") will move the cursor to the first character of a line and "$" will move the cursor to the last character of the line.
+    Type >> to shift the block to the right.
+    Type << to shift the block to the left.
+    Note: The number of characters shifted is controlled by the "shift width" setting. i.e. 4: ":set sw=4"
+    This can be placed in your $HOME/.vimrc file.
+
+Any UNIX command can be executed from the vi command line by typing an "!" before the UNIX command.
+Examples:
+:!pwd - shows your current working directory.
+:!ls - shows files in your current working directory.
+:sh - open a new Bash shell. Editing session is suspended until you exit the shell. Execute all the commands you want and then return to the vim session.
+
+:%s/fff/rrrrr/ - For all lines in a file, find string "fff" and replace with string "rrrrr" for the first instance on a line.
+:%s/fff/rrrrr/g - For all lines in a file, find string "fff" and replace with string "rrrrr" for each instance on a line.
+:%s/fff/rrrrr/gc - For all lines in a file, find string "fff" and replace with string "rrrrr" for each instance on a line. Ask for confirmation
+:%s/fff/rrrrr/gi - For all lines in a file, find string "fff" and replace with string "rrrrr" for each instance on a line. Case insensitive.
 
 **********
 
