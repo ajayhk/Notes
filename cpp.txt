@@ -184,6 +184,10 @@ reinterpret_cast performas a low-level reimnterpretation of bit pattern
 of the operand
 int *ip;
 char *cp = reinterpret_cast<char*>(ip);
+mutable is useful where there is a variable that needs to be modified by a
+const function. The const function is meant to not modify important member
+variables, but a member variable like accessCount which just tracks how
+many accesses are done can be modified using mutable
 **********
 3.5.4.-5.6.1
 **********
@@ -312,8 +316,13 @@ With move, the function return is now moved to the variable
 val = foo();
 **********
 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
+**********
 Basically ‘const’ applies to whatever is on its immediate left (other than
 if there is nothing there in which case it applies to whatever is its immediate right).
+For pointers if const is on the left of *, then data is constant
+If const is to the right of *, then pointer is constant
+int* const p = &i;
+int const *p = &1;
 **********
 If you wish to declare an extern variable in a C++ source code file for use in a C source code file, use:
 extern "C" const int x=10;  
