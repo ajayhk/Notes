@@ -1,5 +1,25 @@
+https://en.cppreference.com/w/cpp/language/initialization
+Depending on context, the initializer may invoke:
+
+Value initialization, e.g. std::string s{};
+Direct initialization, e.g. std::string s("hello");
+Copy initialization, e.g. std::string s = "hello";
+List initialization, e.g. std::string s{'a', 'b', 'c'};
+Aggregate initialization, e.g. char a[3] = {'a', 'b'};
+Reference initialization, e.g. char& c = a[0];
+If no initializer is provided, the rules of default initialization apply.
+*********
+Compilers silently write four functions if they are not explicitly provided
+Copy constructor
+Copy assignment operator
+Destructor
+Default constructor  
+*********
 
 
+
+
+*********
 List initialization of variables of built-in type not allowed if there is
 loss of info
 
@@ -269,9 +289,25 @@ It is as if the compiler rewrites this call as
 Sales_data::isbn(&total)
 
 **********
+Compiler generated functions
+If the class does not generate default functions, compiler does
+For e.g., for the below class
+  class dog() {};
+Compiler will generate
+Copy constructor
+  Dog(const Dog& rhs) {}
+Copy assignment operator
+  Dog& operator=(const Dog& rhs) {}
+Default constructor
+  Dog() {}
 
+Destructor
+  ~Dog() {} 
 **********
-
+To prevent compiler from generating functions, provide the equivalent function
+For preventing, say, Copy constructor from being used
+  Dog(const Dog& rhs) = delete; // C++11
+For C++03, make it private. However, class functions can still use that private fn
 **********
 
 **********
@@ -315,14 +351,30 @@ variable name
 With move, the function return is now moved to the variable
 val = foo();
 **********
-https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
-**********
+// const parameters
+void setDate(const int& date);
+Doing const when you pass the parameter by copy doesnt make sense since you dont
+care if the copy was modified
+void setDate(const int date);
+
+// const return value
+const string& getName();
+
+// const function
+void printName const ();
+
+// consts everywhere
+const int* const foo (const int* const& p) const;
+
 Basically ‘const’ applies to whatever is on its immediate left (other than
 if there is nothing there in which case it applies to whatever is its immediate right).
 For pointers if const is on the left of *, then data is constant
 If const is to the right of *, then pointer is constant
 int* const p = &i;
 int const *p = &1;
+
+
+
 **********
 If you wish to declare an extern variable in a C++ source code file for use in a C source code file, use:
 extern "C" const int x=10;  
@@ -380,7 +432,257 @@ push_back(t)    // Puts t as last element in vector
 empty()         // Returns true if empty
 size()         // Returns the number of elements
 
+**********
+Map:
+std::map
+If a member that doesnt exist is accessed, say map[10], then that empty key
+is inserted. Map.find will not do that
+std::map is a red black tree
+functions supported:
+insert
+[]
+find
+erase
 
+it=mymap.find('b');
+mymap.erase (it);                   // erasing by iterator
+mymap.erase ('c');                  // erasing by key
+it=mymap.find ('e');
+mymap.erase ( it, mymap.end() );    // erasing by range
+
+
+**********
+priority_queue
+
+Doesnt have erase.
+
+Can be implemented by inheriting a chlid class and then
+adding a remove or erase function. The function can be implemented
+by using find algorithm and then removing the element. 
+
+**********
+Heap data structure
+Invariant:
+- Left child is smaller and right child is bigger
+- However not all keys to left are smaller
+class heap
+{
+  int key;
+  void* pointer_to_data;
+  heap *left_child;
+  heap *right_child;
+  heap *parent;
+  operations();
+}
+insert - Log n - The element is inserted as the last element and then a bubble_up operation is done 
+extract_min or extract_max - Log n - The root is extracted and replaced with the last element. Then the last element is bubbled_down
+Can be conceptualized as a tree but implemented as an array
+The invariant is to make sure that both the children are larger than the parent
+Need to also keep track of how many elements are there. This is needed at time of insertions (insert is done at the end and bubbled up)
+**********
+Hash tables
+
+Trees
+Number of entries >= 2^height of tree - 1
+Trees rotations - Left and right rotations. Move X under Y or vice versa
+
+
+Binary search trees
+
+Balanced search tree
+Invariants
+- All keys on left are smaller and all keys on right are larger
+
+C++ struct
+class bst 
+{
+  int key;
+  void* ptr_to_data;
+  bst *left_child;
+  bst *right_chlid;
+  bst *parent;
+
+
+}
+Worst case for search is 0((height)
+To compute the min - Keep going left till you cant go left anymore
+To compute the max - Keep going right till you cant go right anymore
+Predecessor
+- If there is a left node, find the max of left node (or keep going right)
+- if no left node, keep going up (parent) till the parent is smaller than you
+In-order traversal (print in increasing order) - 0(n) operation
+- Traverse left side and print
+- Print root
+- Traverse right side and print
+To delete
+- If no children, then delete
+- If one child, that child becomes the parent (splice operation)
+- If two children, then find predecessor (as shown above) and then swap. Next delete the key. Since the swapped out predecessor has no right, but may have a left, when we delete, the key, we get the case of no children or one child which is easy
+Select and Rank - Need to augment data structure (population of sub tree including that node)
+
+*********
+ Red black trees
+Invariants
+- Each node red or black
+- Root is black
+- Never two reds in a row
+- Every root-NULL path passes through exactly same number of blacks
+Advantage is that the tree height guarantee is there - Height <= 2log2(n+1)
+
+*********
+
+
+
+Graphs
+
+Linked Lists
+
+Sorted Arrays
+
+Bloom filter
+
+B trees
+B+ trees
+
+AVL trees
+Splay trees
+Radix trees
+Tries
+
+*********
+vector:
+
+Contiguous memory.
+Pre-allocates space for future elements, so extra space required beyond what's necessary for the elements themselves.
+Each element only requires the space for the element type itself (no extra pointers).
+Can re-allocate memory for the entire vector any time that you add an element.
+Insertions at the end are constant, amortized time, but insertions elsewhere are a costly O(n).
+Erasures at the end of the vector are constant time, but for the rest it's O(n).
+You can randomly access its elements.
+Iterators are invalidated if you add or remove elements to or from the vector.
+You can easily get at the underlying array if you need an array of the elements.
+list:
+
+Non-contiguous memory.
+No pre-allocated memory. The memory overhead for the list itself is constant.
+Each element requires extra space for the node which holds the element,
+including pointers to the next and previous elements in the list.
+Never has to re-allocate memory for the whole list just because you add an element.
+Insertions and erasures are cheap no matter where in the list they occur.
+It's cheap to combine lists with splicing.
+You cannot randomly access elements, so getting at a particular element in the
+list can be expensive.
+Iterators remain valid even when you add or remove elements from the list.
+If you need an array of the elements, you'll have to create a new one and
+add them all to it, since there is no underlying array.
+In general, use vector when you don't care what type of sequential container
+that you're using, but if you're doing many insertions or erasures to and
+from anywhere in the container other than the end, you're going to want to use list.
+Or if you need random access, then you're going to want vector, not list.
+Other than that, there are naturally instances where you're going to need one or
+the other based on your application, but in general, those are good guidelines.
+********
+https://stackoverflow.com/questions/10699265/how-can-i-efficiently-select-a-standard-library-container-in-c11
+
+Is order important?
+Yes:
+  Last in first out?
+    Stack
+  First in First out?
+    Queue
+  Best in first out?
+    Priority Queues
+  Keep sorted elements?
+  Yes:
+    Look-up keys?
+    Yes:
+      Allow duplicates?
+      Yes:
+        Separate Key/value
+        Yes:
+          MultiMaps
+        No:
+          MultiSets
+      No:
+        Separate Key/value
+        Yes:
+          Maps
+        No:
+          Sets
+    No:      
+      Vectors
+  No:
+    Insert/Erase at middle
+    Yes:
+      Frequent Traversals
+      Yes:
+        Size varies widely
+        Yes:
+          Deque
+        No:
+          Vector
+      No:
+        List
+    No:
+      Persistent position
+      Yes:
+        List
+      No:
+        Size varies widely
+        Yes:
+          Deque
+        No:
+          Vector
+No:
+  Look-up keys
+  Yes:
+    Allow Duplicates
+    Yes:
+      Separate Key/value
+      Yes:
+        Unordered Multimaps
+      No:
+        Unordered Multisets
+    No:
+      Separate Key/Value
+      Yes:
+        Unordered Maps
+      No:
+        Unordered Sets
+  No:
+      Persistent position
+      Yes:
+        List
+      No:
+        Size varies widely
+        Yes:
+          Deque
+        No:
+          Vector
+
+
+
+
+
+        
+********
+Gotchas:
+If you have a const map, using [] operator fails as [] may add an element
+if the element does not exist
+Unordered map requires a compare operator and a hash function for user defined 
+classes. Map requires a compare operator for using user defined elements
+
+
+
+********
+
+Links
+
+https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md
+http://homepages.e3.net.nz/~djm/cppcontainers.html
+http://homepages.e3.net.nz/~djm/containerchoice.png
+http://bigocheatsheet.com
+https://www.cs.helsinki.fi/u/tpkarkka/alglib/k06/lectures/containers.html
 
 
 
