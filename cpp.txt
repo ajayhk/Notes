@@ -660,11 +660,32 @@ No:
         No:
           Vector
 
+********
+Algorithms
+Divide into
+1. Read-only Algorithms
+2. Write Algorithms
+3. Reorder Algorithms
+
+
+Read-only algorithms
+accumulate:
+string sum = accumulate(v.cbegin(), v.cend(), string(""));
+Cant pass string literal as string literal is const char* and there is no + operator
+
+equal(roster1.cbegin(), roster1.cend(), roster2.cbegin());
+
+The element types in the two sequences are not required to match exactly.
+What is required is that we be able to compare elements from the two sequences.
+For example, in the equal algorithm, the element types need not be identical,
+but we do have to be able to use == to compare elements from the two sequences.
 
 
 
 
-        
+
+
+
 ********
 Gotchas:
 If you have a const map, using [] operator fails as [] may add an element
@@ -683,6 +704,7 @@ http://homepages.e3.net.nz/~djm/cppcontainers.html
 http://homepages.e3.net.nz/~djm/containerchoice.png
 http://bigocheatsheet.com
 https://www.cs.helsinki.fi/u/tpkarkka/alglib/k06/lectures/containers.html
+http://thbecker.net/articles/rvalue_references/section_01.html
 
 
 
