@@ -1,3 +1,19 @@
+C++ is statically typed (unlike Python) and so compiler
+must know type of every name
+
+char can be signed or unsigned (depending on machine)
+Be explicit about whether char is signed or unsigned
+unsigned char c = -1 // c = 255
+signed char c = 256  // c = undefined
+
+
+
+
+
+
+
+
+
 https://en.cppreference.com/w/cpp/language/initialization
 Depending on context, the initializer may invoke:
 
@@ -110,6 +126,17 @@ decltype((i)) d = 5; 
 **********
 string s4(10, 'c');   // s4 is cccccccccc
 **********
+STL containers are of three types broadly
+1. Sequential containers (implemented using arrays and linked lists: 
+    vector, deque, list, forward list, array
+2. Associative containers (implemented using binary trees):
+    set, multiset, map, multimap
+3. Unordered containers (implemented as hash tables):
+    unordered map, unordered set
+
+
+
+**********
 Direct and copy forms of initialization
 When = is used, it is copy init. When = is omitted, it is direct initialization
 In cases of multiple values being initialized, only direct init is possible.
@@ -146,12 +173,125 @@ Range based for
 for(declaration: expression) 
     statement;
 **********
+Sequential containers
+Vector, deque, lists, forward lists, arrays
+
 Vector is a template, not a type. vector<int> is a type
+Vector functions include size, empty, clear, swap
+vector.at() is better than vector[] as it includes range check and throws
+out of range exception when index is out of range, but is slower
+Accessing through iterator is faster than throug index access []
+
+Common functions of all containers
+Empty, size, copy constructor, clear, swap
+
+Vector can only grow at end, so only push_back supported
+Deque can grow at beginning or end, so supports push_back and push_front
+Deque is not stored consequtive
+
+**********
+List is doubly linked list
+Fast insert and remove
+insert(itr, value), erase(itr)
+Splice allows cutting a range and inserting in another list and takes constant time
+This is the biggest advantage of lists
+
+Forward list is single linked list
+
+**********
+Arrays 
+Array container is thin layer around naked array
+array<int, 3> x = {1, 2, 3};
+
+Array size cannot be changed
+Different Array sizes are considered as different types
+
+
+**********
+Associative containers dont have find as it is sequential
+
+Sets:
+Sets provide erase (value). Associative containers dont have that
+set.insert(itr, value) does not insert at iterator as it is sorted and will insert
+
+insert returns a pair<set<int>::iterator, bool>
+pair<set<int>::iterator, bool> ret;
+ret = set.insert(5);
+if (ret.second == false)
+  ret.first points to existing element 5
+
+in the right sorted place. However itr can be provided as a hint on where to put the element
+Set and multiset traversal is slower compared to vector
+No random access using []
+Important thing is that the value of set/multiset cannot be modified
+The derefernce of an iterator is a constant and cannot be assigned to
+*it = 5; // Error
+**********
+
+Maps:
+
+Insert in map is using either make_pair() or pair<x, y>('x', 'y')
+Class template does not infer parameter types, function template does
+This is why make_pair(x, y) works
+
+Multimap allows duplicate keys
+
+Keys in maps/multimaps cannot be modified
+Find and insert are O(log(n))
+**********
+
+Unordered associative containers
+unordered_set/multiset and unordered_map/multimap
+
+Member functions find and insert are O(1)
+Hash based containers contain load_factor(), bucket(x), bucket_count() functions
+Setting a value in maps may inadvertantly result in insertions if the element does not exist
+Insert function cannot be used to modify existing value in the container
+To do so, use []
+
+Multiset and multimap do not have [] operator
+**********
+
+Container adaptors
+Priority queues, stack, queue
+These are implemented with fundamental container classes for special needs
+Stack: push, pop, top
+Queue: push, pop, front, back
+Priority queue: push, pop, top
+
+
+
 **********
 Iterator:
 vector<int>::iterator it; // it can read and write vector<int> elements
 vector<int>::const_iterator it3; // it3 can read but not write elements
 cbegin and cend provide const_iterator
+
+5 types of Iterators
+1. Random Iterator: Vector, Deque, Array. Can compare, increment, decrement
+2. Bidirectional Iterator: List, set/multiset, map/multimap. Can increment, decrement
+3. Forward Iterator: Forward List. Can increment
+4. Input Iterator: 
+5. Output Iterator: 
+
+advance (itr, 3) moves iter three spots
+distance(itr1, itr2) gives distance between two iterators
+*********
+Iterator Adaptor:
+1. Insert iterator
+   insert_iterator<vector<int>> i_itr;
+   e.g. to insert in second vector vec2 from first vector vec1 at particular location
+   vector<int>::iterator itr = find(vec2, 16); // Find iterator at element value 16
+   insert_iterator<vector<int>> i_itr(vec2, itr);
+   copy(vec1.cbegin(), vec1.cend(), i_itr); // Copies vec1 items before 16
+   Two other types front_insert_iterator and back_insert_iterator
+2. Stream iterator
+3. Reverse iterator
+4. Move iterator
+
+
+
+
 **********
 Array init with constexpr possible. Not with non-const
 constexpr int sz = 10;
@@ -696,7 +836,24 @@ classes. Map requires a compare operator for using user defined elements
 
 
 ********
+Files
+fstream, ifstream, ofstream
+open(file, mode)
+mode can be
+ios::binary - Open as binary
+ios::in, out - Open as input or output
+ios::ate - Open and set initial position at end
+ios::app - Operations are performed at end of file
+ios::trun - If already exiting file, remove previous content and replace with new
+is_open() to check if open was successful
+close() to close
+Can use getline to read a line
+tellg() gets current get position (read position) (type streampos)
+tellp() gets current put position (write position)
+seekg(position) sets current position. seekg(offset, direction) sets offset from
+direction, which could be ios::beg, cur, end
 
+********
 Links
 
 https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md

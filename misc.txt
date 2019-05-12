@@ -1,0 +1,30 @@
+Floating point representation
+
+Half precision
+5 bits for exponent
+
+Single precision
+8 bits for exponent
+Bit 31 = sign
+Bits 30-23 = exponent
+Calculation as 2^(30..23) - 127
+Bits 22..0 as fracttion
+for (i = 1; i <=23; i++) {
+  if (bit at i set) {
+    sum += 2^-1
+  }
+}
+Add 1
+
+value = (-1)^b31 X 2^(b30..b23)base2 X (1 + sum(b`23-i*2^-1)
+
+Double precision
+11 bits for exponent
+
+
+
+Bfloat16
+8 bits for exponent
+
+
+
