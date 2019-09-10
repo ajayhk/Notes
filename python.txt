@@ -253,36 +253,64 @@ f.write(string) writes the contents of string to the file, returning the number 
 f.tell() returns an integer giving the file object’s current position in the file represented as number of bytes from the beginning of the file
 To change the file object’s position, use f.seek(offset, from_what). A from_what value of 0 measures from the beginning of the file, 1 uses the current file position, and 2 uses the end of the file as the reference point.
 
-Python allows you to use the popular data interchange format called JSON (JavaScript Object Notation). The standard module called json can take Python data hierarchies, and convert them to string representations; this process is called serializing. Reconstructing the data from the string representation is called deserializing. 
+Python allows you to use the popular data interchange format called JSON (JavaScript Object Notation). The standard module called json can take Python data hierarchies, and convert them to string representations; this process is called serializing. Reconstructing the data from the string representation is called deserializing.
 Another variant of the dumps() function, called dump(), simply serializes the object to a text file. So if f is a text file object opened for writing, we can do this:
 json.dump(x, f)
 To decode the object again, if f is a text file object which has been opened for reading:
 x = json.load(f)
-Serializing arbitrary class instances in JSON requires a bit of extra effort. 
+Serializing arbitrary class instances in JSON requires a bit of extra effort.
 
-Contrary to JSON, pickle is a protocol which allows the serialization of arbitrarily complex Python objects. As such, it is specific to Python and cannot be used to communicate with applications written in other languages. 
+Contrary to JSON, pickle is a protocol which allows the serialization of arbitrarily complex Python objects. As such, it is specific to Python and cannot be used to communicate with applications written in other languages.
 
+Errors and Exceptions:
+Syntax errors are parsing errors
+Errors detected during execution are called exceptions
 
+while True:
+    try:
+        x = int(input("Please enter a number: "))
+        break
+    except ValueError:
+        print("Oops!  That was no valid number.  Try again...")
+The try statement works as follows.
+First, the try clause (the statement(s) between the try and except keywords) is executed.
+If no exception occurs, the except clause is skipped and execution of the try statement is finished.
+If an exception occurs during execution of the try clause, the rest of the clause is skipped. Then if its type matches the exception named after the except keyword, the except clause is executed, and then execution continues after the try statement.
+If an exception occurs which does not match the exception named in the except clause, it is passed on to outer try statements; if no handler is found, it is an unhandled exception and execution stops with a message as shown above.
 
+An except clause may name multiple exceptions as a parenthesized tuple, for example:
+except (RuntimeError, TypeError, NameError):
+    pass
 
+The last except clause may omit the exception name(s), to serve as a wildcard. It can also be used to print an error message and then re-raise the exception.
+import sys
+try:
+    f = open('myfile.txt')
+    s = f.readline()
+    i = int(s.strip())
+except OSError as err:
+    print("OS error: {0}".format(err))
+except ValueError:
+    print("Could not convert data to an integer.")
+except:
+    print("Unexpected error:", sys.exc_info()[0])
+    raise
 
+The try … except statement has an optional else clause, which, when present, must follow all except clauses. It is useful for code that must be executed if the try clause does not raise an exception.
 
+The raise statement allows the programmer to force a specified exception to occur. For example:
+raise NameError('HiThere')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: HiThere
+The sole argument to raise indicates the exception to be raised. This must be either an exception instance or an exception class (a class that derives from Exception). If an exception class is passed, it will be implicitly instantiated by calling its constructor with no arguments:
+raise ValueError
 
+A finally clause is always executed before leaving the try statement, whether an exception has occurred or not. When an exception has occurred in the try clause and has not been handled by an except clause (or it has occurred in an except or else clause), it is re-raised after the finally clause has been executed.
+In real world applications, the finally clause is useful for releasing external resources (such as files or network connections), regardless of whether the use of the resource was successful.
 
+https://docs.python.org/3/tutorial/classes.html
 
-
-
-
-
-
-
-
-
-
-
-
-
-httpe://docs.python.org/3/tutorial/classes.html#iterators
 Namespaces:
 To rebind variables found outside of the innermost scope, the nonlocal statement can be used; if not declared nonlocal, those variables are read-only (an attempt to write to such a variable will simply create a new local variable in the innermost scope, leaving the identically named outer variable unchanged).
 The language definition is evolving towards static name resolution, at “compile” time, so don’t rely on dynamic name resolution! (In fact, local variables are already determined statically.)
