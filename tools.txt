@@ -1,3 +1,119 @@
+Virtualenv:
+virtualenv -p /usr/bin/python .venv_<name>
+(make sure /usr/bin/python points to python3)
+
+Venv:
+python3 -m venv /path/to/new/virtual/environment
+pip install library==1.2.2
+pip install -r requirements.txt
+
+If error creating venv, "Error: Command '['/home/aharikumar/gfs/noise_distiller3/.venv_noise_distiller3/bin/python3', '-Im', 'ensurepip', '--upgrade', '--default-pip']' returned non-zero exit status 1."
+install --without-pip
+wget https://bootstrap.pypa.io/get-pip.py -O ./get-pip.py
+python ./get-pip.py or python3 ./get-pip.py
+
+Git:
+git log --pretty=oneline
+git log --pretty=format:"%h - %an, %ar : %s"
+git rebase -i HEAD~N
+
+Tmux:
+Tmux commands
+Install
+
+Tmux install
+# Ubuntu
+sudo apt-get install tmux
+# Mac
+brew install tmux
+
+
+Start a new tmux session
+
+Tmux new session
+tmux new -s <name_of_session>
+
+
+Attach to session
+
+Tmux attach to session
+tmux a -t <name_of_session>
+
+
+Detach from session
+
+Tmux new session
+tmux new -s <name_of_session>
+
+
+<ctrl-b> + d
+
+Split screen vertically
+
+Tmux split screen vertically
+<ctrl-b> + %
+
+
+Split screen horizontally
+
+Tmux split screen horizontally
+<ctrl-b> + "
+
+
+Maximize a window (same command to restore to original size)
+
+Tmux Maximize a window (same command to restore to original size)
+<ctrl-b> + z
+
+
+To page-up and down
+
+Tmux Page up/down
+<ctrl-b> + [
+# Now use regular up/down arrows or page up/down to scroll
+# use esc (maybe press multiple times) to exit scroll mode
+
+
+To replace <ctrl-b> hot-key with <ctrl-a>
+
+Tmux use ctrl-a
+set-option -g prefix C-a
+
+
+To use mouse scrolling
+
+Tmux enable mouse scrolling
+set -g mouse on
+
+
+To resize panes (windows)
+
+Tmux resize panes (windows)
+:resize-pane -D (Resizes the current pane down)
+:resize-pane -U (Resizes the current pane upward)
+:resize-pane -L (Resizes the current pane left)
+:resize-pane -R (Resizes the current pane right)
+:resize-pane -D 10 (Resizes the current pane down by 10 cells)
+:resize-pane -U 10 (Resizes the current pane upward by 10 cells)
+:resize-pane -L 10 (Resizes the current pane left by 10 cells)
+:resize-pane -R 10 (Resizes the current pane right by 10 cells)
+
+
+pdb:
+to run python code
+!import code; code.interact(local=vars())
+
+
+Jupyter:
+https://www.dataquest.io/blog/jupyter-notebook-tips-tricks-shortcuts/
+%env CUDA_VISIBLE_DEVICES=1
+or
+model = torchvision.models.alexnet(pretrained=True).cuda(device)
+
+Rsync:
+rsync -zarvh user@remote_server.com:/path local_path
+
+
 Brew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
