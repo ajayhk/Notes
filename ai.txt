@@ -1,1 +1,47 @@
-Machine learning 
+Glossary
+
+Cross-entropy loss:
+  Log loss between 0 and 1. When the true prediction is 1 and the actual prediction
+  is lower, as the actual prediction gets closer to 0, the loss increases exponentially
+def CrossEntropy(yHat, y):
+    if y == 1: # if true prediction is positive
+      return -log(yHat) # decrease loss the closer the prediction is to 1
+    else:
+      return -log(1 - yHat) # increase loss if prediction goes to 1
+Object detection:
+  Finding objects of interest in an image
+Bounding boxes:
+  Boxes drawn around objects of interest
+  Each bounding box also has a classification probability associated
+  that predicts the likelyhood of classes
+Confidence score:
+  Bounding boxes also have a confidence score associated that says
+  how likely this box contains an (any) object
+NMS:
+  Boxes whose confidence score is low (below a certain threshold) can
+  be filtered out to avoid too many bounding boxes to process. This is
+  called Non-Max Supression (NMS)
+Multistage detector:
+  First stage, a region proposal is created of regions that may contain objects
+  Second stage, prediction done for these regions. E.g. Faster R-CNN
+Onestage detector:
+  Single pass and predicts all bounding boxes in one go. E.g. Yolo, SSD
+IOU (Intersection over Union) aka Jaccard index:
+
+
+
+
+
+
+
+Object Detection:
+
+Classifiers do not work well when there are multiple objects in the image
+Object detectors predicts bounding boxes for each image and so can better predict the image
+Bounding boxes require four additional numbers for each of the corners
+Object detectors have two outputs
+1. The usual classification prediction
+2. Bounding box regression
+Thus the loss function is an addition of the regression loss for bounding box (usually MSE)
+and cross-entropy loss for classification
+    
