@@ -1,5 +1,27 @@
 Glossary
 
+Sigmoid:
+  sigmoid(x) = 1/(1+e^x)
+  Sigmoid bounds the output x between 0 and 1 and is useful for probabilities and other
+  values that need to be bounded between 0 and 1
+Linear regression:
+  Model relationship between one or more independent variables and a dependent scalar
+  If only one input variable, then simple linear regression, else multiple linear regression
+  Simple linear regression is useful for finding relationship between two continuous variables
+  Multivariate linear regression is where multiple coorelated dependent variables are predicted
+Logistic regression:
+  Models the probability of certain classes or events existing. Binary is when there are only two classes
+  For more than two, each class is assigned a probability score and the sum of probabilities adds to 1
+  Sigmoid is usually used for such functions as that stays between 0 and 1
+  yhat = sigmoid (wt*x + b)
+Loss function:
+  Loss function is a function of difference between expected and actual prediction. Loss (yhat, y)
+  MSE doesnt work well with gradient descent for Logistic regression
+  So use L(yhat, y) = -(y.log(yhat) + (1-y).log(1-yhat))
+  If y=1, L = -log(yhat), so yhat should be as large as possible, close to 1 since sigmoid taken
+  If y=0, L = log(1-yhat), so yhat should be as close to 0 as possible
+Cost function:
+  Usually average of the above loss functions + regularization etc.
 Cross-entropy loss:
   Log loss between 0 and 1. When the true prediction is 1 and the actual prediction
   is lower, as the actual prediction gets closer to 0, the loss increases exponentially
