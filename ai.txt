@@ -27,10 +27,13 @@ Multistage detector:
 Onestage detector:
   Single pass and predicts all bounding boxes in one go. E.g. Yolo, SSD
 IOU (Intersection over Union) aka Jaccard index:
+  Area of overlap / Area of union
 
 
 
-
+Neural networks
+Moving from sigmoid to Relu helps gradient descent train faster because
+sigmoid had really flat slopes at the ends that made training really slow
 
 
 
@@ -44,4 +47,27 @@ Object detectors have two outputs
 2. Bounding box regression
 Thus the loss function is an addition of the regression loss for bounding box (usually MSE)
 and cross-entropy loss for classification
-    
+Bounding boxes need to specialize to only handle one object. Otherwise they will end up taking
+the average of all objects and fail. Hence each detector is assigned a specific position in image
+For that, a grid is created and each detector focuses on only one cell in the grid
+There can be multiple detectors for each grid, with each grid focusing on image of different sizes
+For example, one detector might be for a square object bb, one for a long object and one for a wide object
+A detector is responsible for detecting an image only if the center of the image lies in the grid
+that the detector owns. This prevents multiple detectors of different grids competing to detect one object
+Yolov3 has three grids of sizes 13x13, 19x19
+Yolov3 detector outputs 85 numbers, 80 for the class probabilities, 4 for bounding box coordinates and
+one for confidence score (that an object exists for that bounding box)
+If there are 5 detectors, there would be 5*85 channels = 425 channels
+If a grid ix 13x13, and 5 detectors, then there would be 13x13x5=845 predictions
+To avoid too many predictions, the confidence score (object likely?) is used to remove most predictions
+NMS removes all boxes that overlap (beyond a certain threshold called nms threshold) with the box
+that has the highest confidence
+At the end of these two, there would be around 10 predictions out of possible 845
+Anchors refer to the 5 box sizes (square, long wide etc.) which map to each detector
+Thus there will be as many anchors as detectors and detectors map 1:1 to anchors
+
+
+
+
+
+
