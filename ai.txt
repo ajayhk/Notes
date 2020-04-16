@@ -56,6 +56,38 @@ IOU (Intersection over Union) aka Jaccard index:
 Neural networks
 Moving from sigmoid to Relu helps gradient descent train faster because
 sigmoid had really flat slopes at the ends that made training really slow
+Consider Logical regression
+Forward pass:
+  z = w1*x1 + w2*x2 + b
+  yhat = Sigmoid(z) (use yhat == a for simplicity)
+  Loss = -(y*log(yHat) + (1-y)*log(1-yHat))
+  Cost is average of all losses. So cost is 1/m * sum(Loss(yhat, y))
+Doing derivatives for the backward pass:
+  dL(yhat, y)/dyhat 
+  since a == yhat, this becomes dL(a, y)/da. This can be shortened as da
+  So da = dL(a, y)/da = -y*log(a)/da -(1-y)*log(1-a)/da
+  = -y/a + (1-y)/(1-a)
+  Now calculate the derivative wrt z; dL(a, y)/dz = dL/dz = dL/da * da/dz (per chain rule)
+  da/dz = d(1/(1+e^a))/dz = a * (1-a)
+  dL/dz = dl/da * da/dz = a * (1-a) * (-y/a + (1-y)/(1-a)) = a - y
+  dw1 = dL/dw1 = dL/dz * dz/dw1 = (a - y) * x1
+  dw2 = (a - y) * x2
+  db = a - y
+  Weight updte: w1 = w1 - lr*dw1; w2 = w2 - lr*dw2; b = b - lrdb
+Neural network can just be considered as a number of logistic regression steps put together
+Activation functions:
+Linear activation functions f(x) = x
+Need non-linear activation functions as if you use only linear activation functions, the composition
+of two or more linear activation functions is equivalent to a linear activation function, so no
+use of using multiple layers. Usually used only in last layer
+Sigmoid: Between [0, 1]
+Sigmoid is useful almost only as the last activation function of a binary classifier as the
+outputs we need are to be between 0 and 1
+Tanh: [-1, 1] = (1-e^-2x)/(1+e^-2x) == (e^x - e^-x)/(e^x + e^-x)  
+Tanh is better than sigmoid as it is centered on 0 instead of 0.5 for Sigmoid
+Both tanh and sigmoid have the issue that the slope is very small as the values get very large
+or small
+
 
 
 
