@@ -50,7 +50,33 @@ Onestage detector:
   Single pass and predicts all bounding boxes in one go. E.g. Yolo, SSD
 IOU (Intersection over Union) aka Jaccard index:
   Area of overlap / Area of union
-
+Bias/Variance
+  High Bias when we underfit the data. Here both the training and test errors are high
+  To fix high bias, try larger network, train longer or different NN architecture
+  High Variance when we overfit the data. Large diff between training and test accuracy
+  To fix high variance, get more data, regularization or different NN architecture
+Regularization
+  Used to reduce the variance
+  Add lambda (regularization hyperparameter) * regularization function to the cost function
+  L2 regularization is also called weight decay. The derivative is lambda/m*W[l]
+  Regularization function could be euclidean norm (L2 regularization)
+  Frobenius norm: sqrt(sum of square of elements)
+  With L1 regularization, lot of w values become zero (helps sparsity)
+  Regularization prevents overfitting by linearizing the layers (e.g. keeping w low keeps activation
+  in the linear range of tanh). Thus the whole network gets closer to linear than non-linear
+  preventing complex functions preventing overfitting
+  Dropout is another form of regularizaton
+  Implemented by multiplying activation with matrix of zeros and ones with probability of dropout value
+  and then dividing all remaning elements by dropout value to make sure that activation sum is ~ same
+  Dropout prevents the weights from relying on one feature alone as that feature
+  may disappear due to dropout
+  Other regularization techniques include data augmentation, early stopping (stop when test set
+  error starts increasing to prevent overfitting)
+Normalizing training set
+  x-u (mean) and then divide by sigma (normalizes the variance)
+  Normalizing makes the cost function simpler and easier to optimize. Plotting the Cost wrt
+  weight and bias will be a nice convex function after normalizing, while without normalizing
+  it would be very sharp and so the learning rate might need to be small
 
 
 Neural networks
@@ -122,6 +148,13 @@ Thus there will be as many anchors as detectors and detectors map 1:1 to anchors
 
 
 
+Z1 = W1*A0 + B1
+A1 = G(Z1)
+
+dzl = da*g'(z)
+dwl = dzl*a(l-1)
+dbl = dzl
+da[l-1] = dzl*wl
 
 
 
