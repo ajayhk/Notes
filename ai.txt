@@ -116,6 +116,30 @@ Adam is RMSProp + Momentum (Adaptive Momentum estimation)
 Learning Rate decay:
   Nearer convergence, take slower steps so that it oscilates in a tighter region around the minimum
   lr = lr/(1+decay*epoch_num)
+Hyperparameter tuning:
+  LR (alpha), Beta, Beta1/2 minibatch, momemntum, number of hidden layers etc are hyperpamaters
+  Rather than trying a grid it is better to try random values (that way we get higher range of both axis)
+  in case of trying out two hyperpamaters
+  Also scale is important. When considing random values between 0.0001 and 0.1, choosing a random
+  range is not helpful as you need equal points between 0.0001 and 0.001 as you have between 0.01 and 0.1
+Batch normalization:
+  Normalizes the activations with mean and variance. This speeds up the training because normalizing the inputs
+  to each layer enables the model to train on shifted data (covariant shifting). Same shift happens in the hidden
+  units during training and so BN avoids these shifts improving stablity. BN also actsa s a regularizer
+  by adding noise (as the bias and variance varies from batch to batch)
+  BN is usually removed during inference
+  Usually done on Z (input to activations) instead of A (activations).
+  Controlled by two learnable parameters beta and gamma
+  Z(i)norm = (Z(i) - u)/sqrt(sigma^2 + epsilon) where u is Mu = 1/m*np.sum(Z(i)) and sqrt(sigma^2) is variance and
+  sigma^2 = 1/m*np.sum(Z(i) - u)^2
+  Zhat(i) = beta*Z(i)norm + gamma
+  Beta maps to the variance and gamma to the mean. As in, if Beta = Variance and gamma = mean, then it is
+  equivalent to no BN being applied
+Softmax:
+  Used as activation on last layer of multiclass classification problem. Gives probabilities that add to one
+  t = e^Z; A = t/np.sum(t)
+  Different from hard max where only one value has output 1 and everything else is 0
+
 
 Neural networks
 Moving from sigmoid to Relu helps gradient descent train faster because
