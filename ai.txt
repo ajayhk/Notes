@@ -55,6 +55,9 @@ Bias/Variance
   To fix high bias, try larger network, train longer or different NN architecture
   High Variance when we overfit the data. Large diff between training and test accuracy
   To fix high variance, get more data, regularization or different NN architecture
+  High bias (avoidable bias) if big diff between train and expected accuracy
+  Mismatch between distributions if low diff between train and train-dev but high diff with dev
+  High variance if big diff between train and train-dev datasets
 Regularization
   Used to reduce the variance
   Add lambda (regularization hyperparameter) * regularization function to the cost function
@@ -139,6 +142,23 @@ Softmax:
   Used as activation on last layer of multiclass classification problem. Gives probabilities that add to one
   t = e^Z; A = t/np.sum(t)
   Different from hard max where only one value has output 1 and everything else is 0
+Precision:
+  Of all the images predicted, how many are correction
+Recall:
+  Of all the images, how many were predicted
+F1 score:
+  Harmonic mean of precision and recall. 2/(1/Precision + 1/Recall)
+Bayes optimial error:
+  Best possible error (not possible to go beyond this accuracy)
+Transfer learning:
+  Replace last (or last few) layers of a neural network trained on some data
+  with uninitialized weights/biases and then train for a different task
+  Usually useful when the tasks are similar and the amount of data we have for
+  the new task is less
+Multitask learning:
+  Learn multiple features at the same time. Performs better than having different NNs
+  Multitask learning useful when training on set of tasks that share low level features
+  Amount of data for each task is similar
 
 
 Neural networks
@@ -256,7 +276,19 @@ def backward_propagation_n(X, Y, cache):
     
     return gradients
 
-
+General training tips
+Ways to improve accuracy of the model include
+  Get more data
+  Get diverse training set
+  Train longer
+  Try different Optimizer: Adam instead of GradientDescent
+  Try a bigger or smaller model
+  Try a different network architecture (Activation functions, hidden units, wider network)
+  Try dropouts, L2 regularization,
+Make sure that dev/test sets come from the same distribution (training set having different
+distribution is a bit ok). To check what the bias and variance is on this, take a subset of
+the training set and call it the training-dev set and then compare the accuracy against both
+the training-dev set and the dev set.
 
 Object Detection:
 
