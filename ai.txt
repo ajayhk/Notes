@@ -276,6 +276,30 @@ def backward_propagation_n(X, Y, cache):
     
     return gradients
 
+
+Convolution:
+  Pass filter (aka kernel) through image and do sum of (elementwise multiply of each)
+  a11*f11 + a12*f12... + a32*f32 + a33*f33  <-- gives one element of output
+  Filters can be considered as feature detectors, say edge detectors or circle detectors
+  Each filter will thus morph into a different feature detector during training
+  Padding so that corner and edge elements get more filters to pass through
+  Stride to downsample further
+  Convolution represented using * so A*F
+  nIxnI * nFxnF = nOxnO. Size of nO = nI - nF + 1
+  With Padding and Strides
+  nO = (nI + 2P - nF)/S  + 1
+  Number of outputs (or channels in a single output) equal to number of filters
+  In 3D convolutions, filters also have same number of channels as the input, but
+  output has only one channel as the entire 3D convolve is summed.
+  Bias is applied to each entire output's channel. Thus number of bias = num_channels
+  In convolution, size of the parameters depends much lesser on size of input (compared
+  to FC), hence it scales much better for larger images
+  The reason that convs have lot lesser parameters is that conv filters do parameter sharing
+  So, the same edge detector can be used throughout the image.
+  Another reason for less parameters is that there is sparsity of connection. Each output
+  element only depends on a subset of the inputs (unlike FC)
+
+
 General training tips
 Ways to improve accuracy of the model include
   Get more data
