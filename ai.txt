@@ -48,8 +48,6 @@ Multistage detector:
   Second stage, prediction done for these regions. E.g. Faster R-CNN
 Onestage detector:
   Single pass and predicts all bounding boxes in one go. E.g. Yolo, SSD
-IOU (Intersection over Union) aka Jaccard index:
-  Area of overlap / Area of union
 Bias/Variance
   High Bias when we underfit the data. Here both the training and test errors are high
   To fix high bias, try larger network, train longer or different NN architecture
@@ -80,12 +78,14 @@ Normalizing training set
   Normalizing makes the cost function simpler and easier to optimize. Plotting the Cost wrt
   weight and bias will be a nice convex function after normalizing, while without normalizing
   it would be very sharp and so the learning rate might need to be small
+Differentiable function:
+  Can find the slope of the  curve at any two points (not possible when doing quantization). This enables backpropagation
 Activation functions:
   Linear activation functions f(x) = x
   Need non-linear activation functions as if you use only linear activation functions, the composition
   of two or more linear activation functions is equivalent to a linear activation function, so no
   use of using multiple layers. Usually used only in last layer
-  Sigmoid: Between [0, 1]
+  Sigmoid (aka Logistic Activation Function): Between [0, 1]
   Sigmoid is useful almost only as the last activation function of a binary classifier as the
   outputs we need are to be between 0 and 1
   Tanh: [-1, 1] = (1-e^-2x)/(1+e^-2x) == (e^x - e^-x)/(e^x + e^-x)  
@@ -143,11 +143,15 @@ Softmax:
   t = e^Z; A = t/np.sum(t)
   Different from hard max where only one value has output 1 and everything else is 0
 Precision:
-  Of all the images predicted, how many are correction
+  Of all the images predicted, how many (what percent) are correction
+  Precision = TP / (TP + FP)
 Recall:
-  Of all the images, how many were predicted
+  Of all the correct images, how many (what percent) were predicted
+  Recall = TP / (TP + FN)
 F1 score:
   Harmonic mean of precision and recall. 2/(1/Precision + 1/Recall)
+IOU (Intersection over Union) aka Jaccard index:
+  Area of overlap / Area of union
 Bayes optimial error:
   Best possible error (not possible to go beyond this accuracy)
 Transfer learning:
@@ -342,5 +346,31 @@ that has the highest confidence
 At the end of these two, there would be around 10 predictions out of possible 845
 Anchors refer to the 5 box sizes (square, long wide etc.) which map to each detector
 Thus there will be as many anchors as detectors and detectors map 1:1 to anchors
+
+
+Yolov3:
+Coco has 80 classes
+Yolov3 has three detectors/anchorboxes
+Grids are called as cells in the paper. Similarly anchors == bounding boxes
+Predicts bounding boxes, class probabilities and objectness (likelyhood that there is an object in the box)
+Bounding boxes:
+The network predicts 4 coordinates, tx, ty, tw, th. 
+If the cell (grid) offset is at cx, cy and the bounding box (anchor) priors (default shapes) are ph and pw, then
+bx = sigma(tx) + cx
+by = sigma(ty) + cy
+bh = ph*e^th
+bw = pw*e^tw
+MSE used for calculating loss of coordinates t_expected - t_predicted
+Objectness:
+Logistic regression used. 1 if BB prior overlaps target more than any other BB
+Class probabilities:
+Multilabel classifier (independent logistic classifiers and not softmax as it didnt impact perf), hence BCELoss
+instead of BCEWithLogitsLoss. Also using softmax assumes that each box can have only one class label which is not case
+in open images dataset (woman + person)
+Three boxes (input to three yolo layers) predicted. Size = N x N x three anchors x (80 class preds + 1 objectness + 4 BB offsets)
+Feature map from two layers before first grid (13x13) taken and then upsampled by 2x and then merged with a feature map from
+even earlier in the network. Gives more semantic info from upsampled feature map and finer grain from earlier feature map. Add a
+few convolution to get a prediction twice the size. Repeat one more time for third Yolo layer input
+
 
 
