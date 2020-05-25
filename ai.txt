@@ -73,6 +73,8 @@ Regularization
   may disappear due to dropout
   Other regularization techniques include data augmentation, early stopping (stop when test set
   error starts increasing to prevent overfitting)
+  Data augmentation methods include mirroring, rotation, random croping, color shifting (diff RGB values or
+  PCA color augmentation), distortions 
 Normalizing training set
   x-u (mean) and then divide by sigma (normalizes the variance)
   Normalizing makes the cost function simpler and easier to optimize. Plotting the Cost wrt
@@ -302,9 +304,17 @@ Convolution:
   So, the same edge detector can be used throughout the image.
   Another reason for less parameters is that there is sparsity of connection. Each output
   element only depends on a subset of the inputs (unlike FC)
-
-
-General training tips
+  To calculate cost of convolution, each output element is got by doing element wise multiply
+  followed by sum of each filter. Hence if filter ix 5x5x32, and output is 7x7x64, the cost of 
+  each convolution is the multiplication of these two 5x5x32x7x7x64
+  1x1 convolutions reduces the number of channels to 1 per filter. So it is a good way to reduce
+  the number of channels in the network. Pooling used to shrink the height and width.
+  1x1 convs acts as a FC layer and saves on computation by reducing the number of filters. Hence
+  it is called a bottleneck layer
+  FC layers can be converted to convolution layers. Suppose a Conv of 5x5x16 feeds into a FC of 400
+  The way to convert this FC (400) into a convolution is to have 400 filters of 5x5x16. Thus passing
+  the filters over the conv gives us 400 outputs which can be considered equivalent to the FC of 400
+General training tips:
 Ways to improve accuracy of the model include
   Get more data
   Get diverse training set
@@ -317,6 +327,10 @@ Make sure that dev/test sets come from the same distribution (training set havin
 distribution is a bit ok). To check what the bias and variance is on this, take a subset of
 the training set and call it the training-dev set and then compare the accuracy against both
 the training-dev set and the dev set.
+Inference tips: 
+  Train an ensamble of networks and then take the average of their outputs
+  Do multi-crop (10 crop)
+
 
 Object Detection:
 
@@ -346,7 +360,23 @@ that has the highest confidence
 At the end of these two, there would be around 10 predictions out of possible 845
 Anchors refer to the 5 box sizes (square, long wide etc.) which map to each detector
 Thus there will be as many anchors as detectors and detectors map 1:1 to anchors
+Classification with localization is the scenario where there is only one object in the image and 
+we need to detect that
+Landmark Detection:
+Detect multiple points of interest, e.g. corner of eyes, face, mouth, person's joints etc
 
+
+Networks:
+Resnets:
+The skip connection goes from activation of one layer to be added to the output of linear of layer+2
+but before applying the non-linearity (Relu) to that layer+2
+
+Inception:
+Do multiple convolutions (1x1, 3x3, 7x7) and even max pooling (followed by 1x1 convs to reduce number
+of channels) and then outputs are same size (as inputs) and are stacked up
+Inception consists of these inception blocks
+Another idea in inception is to have branches off hidden layers that do prediction and the idea
+is that this prevents overfitting and also makes network more resilient
 
 Yolov3:
 Coco has 80 classes
