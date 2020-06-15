@@ -12,7 +12,7 @@ One way to remember how slices work is to think of the indices as pointing betwe
  0   1   2   3   4   5   6
 -6  -5  -4  -3  -2  -1
 The first row of numbers gives the position of the indices 0…6 in the string; the second row gives the corresponding negative indices. The slice from i to j consists of all characters between the edges labeled i and j, respectively.
-Python strings cannot be changed — they are immutable. Therefore, assigning to an indexed position in the string results in an error:
+Python strings cannot be changed - they are immutable. Therefore, assigning to an indexed position in the string results in an error:
 
 Slices:
 Out of range slices are handled gracefully in Python
@@ -234,10 +234,13 @@ Files:
 f = open('workfile', 'w')
 It is good practice to use the with keyword when dealing with file objects. The advantage is that the file is properly closed after its suite finishes, even if an exception is raised at some point.
 with open('workfile') as f:
-    read_data = f.read() 
+    read_data = f.read()
 
 If you’re not using the with keyword, then you should call f.close() to close the file and immediately free up any system resources used by it. If you don’t explicitly close a file, Python’s garbage collector will eventually destroy the object and close the open file for you, but the file may stay open for a while. Another risk is that different Python implementations will do this clean-up at different times.
 
+To use 'with' statement in user defined objects you only need to add the methods __enter__() and __exit__() in the object methods
+The `with` statement itself ensures proper acquisition and release of resources.
+'With' statement helps avoiding bugs and leaks by ensuring that a resource is properly released when the code using the resource is completely executed
 
 To read a file’s contents, call f.read(size)
 When size is omitted or negative, the entire contents of the file will be read and returned
@@ -320,7 +323,7 @@ The global statement can be used to indicate that particular variables live in t
 
 
 Classes:
-When a class definition is entered, a new namespace is created, and used as the local scope — thus, all assignments to local variables go into this new namespace. In particular, function definitions bind the name of the new function here.
+When a class definition is entered, a new namespace is created, and used as the local scope - thus, all assignments to local variables go into this new namespace. In particular, function definitions bind the name of the new function here.
 When a class definition is left normally (via the end), a class object is created.
 
 __doc__ is also a valid attribute, returning the docstring belonging to the class
@@ -396,10 +399,21 @@ What makes generators so compact is that the __iter__() and __next__() methods a
 Another key feature is that the local variables and execution state are automatically saved between calls. This made the function easier to write and much more clear than an approach using instance variables like self.index and self.data. In addition to automatic method creation and saving program state, when generators terminate, they automatically raise StopIteration.
 Some simple generators can be coded succinctly as expressions using a syntax similar to list comprehensions but with parentheses instead of square brackets. These expressions are designed for situations where the generator is used right away by an enclosing function. Generator expressions are more compact but less versatile than full generator definitions and tend to be more memory friendly than equivalent list comprehensions.
 
+Objects as functions:
+Just like functions are objects and can be treated like objects, objects can also be treated as functions
+To do so, implement __call__ function inside the object
+
+Map:
+Map can take a unary function and collection of arguments and retuns an iterator that can be used
+for i in map(abs, [1, -2, 3, -4]):
+    print(i)
+
 Odds and ends
 Sometimes it is useful to have a data type similar to the Pascal “record” or C “struct”, bundling together a few named data items. An empty class definition will do nicely:
 
-
+To check if a variable exist
+if 'xx' not in locals(): #(globals() for global variables)
+    xx = []
 
 
 
