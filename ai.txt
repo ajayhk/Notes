@@ -40,9 +40,12 @@ Confidence score:
   Bounding boxes also have a confidence score associated that says
   how likely this box contains an (any) object
 NMS:
-  Boxes whose confidence score is low (below a certain threshold) can
-  be filtered out to avoid too many bounding boxes to process. This is
-  called Non-Max Supression (NMS)
+  If multiple boxes are predicted for a single object, a single box can be selected using NMS
+  First, boxes which have low confidence score (below a certain threshold) can be filtered out.
+  Second, the box with the highest confidence score is selected. All other bounding boxes are compared
+  to this box and if they overlap with this BB beyond a threshold (say 0.5), then they are discarded.
+  Next the next highest confidence BB is selected and the process is repeated till there are no
+  more BB to process
 Multistage detector:
   First stage, a region proposal is created of regions that may contain objects
   Second stage, prediction done for these regions. E.g. Faster R-CNN
@@ -74,7 +77,7 @@ Regularization
   Other regularization techniques include data augmentation, early stopping (stop when test set
   error starts increasing to prevent overfitting)
   Data augmentation methods include mirroring, rotation, random croping, color shifting (diff RGB values or
-  PCA color augmentation), distortions 
+  PCA color augmentation), distortions
 Normalizing training set
   x-u (mean) and then divide by sigma (normalizes the variance)
   Normalizing makes the cost function simpler and easier to optimize. Plotting the Cost wrt
@@ -90,7 +93,7 @@ Activation functions:
   Sigmoid (aka Logistic Activation Function): Between [0, 1]
   Sigmoid is useful almost only as the last activation function of a binary classifier as the
   outputs we need are to be between 0 and 1
-  Tanh: [-1, 1] = (1-e^-2x)/(1+e^-2x) == (e^x - e^-x)/(e^x + e^-x)  
+  Tanh: [-1, 1] = (1-e^-2x)/(1+e^-2x) == (e^x - e^-x)/(e^x + e^-x)
   Tanh is better than sigmoid as it is centered on 0 instead of 0.5 for Sigmoid
   Both tanh and sigmoid have the issue that the slope is very small as the values get very large
   or small
@@ -127,11 +130,17 @@ Hyperparameter tuning:
   in case of trying out two hyperpamaters
   Also scale is important. When considing random values between 0.0001 and 0.1, choosing a random
   range is not helpful as you need equal points between 0.0001 and 0.001 as you have between 0.01 and 0.1
+Normalization:
+  Usually changing the scale, e.g. from 10-1000 to 0-1
+Standardization:
+  Subtract by the mean and then divide by the standard deviation. This changes the data to have a mean of 0
+  and a standard deviation of 1
 Batch normalization:
-  Normalizes the activations with mean and variance. This speeds up the training because normalizing the inputs
+  Normalizes (standardizes) the activations with mean and variance. This speeds up the training because normalizing the inputs
   to each layer enables the model to train on shifted data (covariant shifting). Same shift happens in the hidden
-  units during training and so BN avoids these shifts improving stablity. BN also actsa s a regularizer
-  by adding noise (as the bias and variance varies from batch to batch)
+  units during training and so BN avoids these shifts improving stablity. BN prevents large outputs from having outsized influence
+  on the training process and stabilizes training
+  BN also acts as a regularizer by adding noise (as the bias and variance varies from batch to batch)
   BN is usually removed during inference
   Usually done on Z (input to activations) instead of A (activations).
   Controlled by two learnable parameters beta and gamma
@@ -177,7 +186,7 @@ Forward pass:
   Loss = -(y*log(yHat) + (1-y)*log(1-yHat))
   Cost is average of all losses. So cost is 1/m * sum(Loss(yhat, y))
 Doing derivatives for the backward pass:
-  dL(yhat, y)/dyhat 
+  dL(yhat, y)/dyhat
   since a == yhat, this becomes dL(a, y)/da. This can be shortened as da
   So da = dL(a, y)/da = -y*log(a)/da -(1-y)*log(1-a)/da
   = -y/a + (1-y)/(1-a)
@@ -205,10 +214,10 @@ Backward pass:
 def forward_propagation_n(X, Y, parameters):
     """
     Implements the forward propagation (and computes the cost) presented in Figure 3.
-    
+
     Arguments:
     X -- training set for m examples
-    Y -- labels for m examples 
+    Y -- labels for m examples
     parameters -- python dictionary containing your parameters "W1", "b1", "W2", "b2", "W3", "b3":
                     W1 -- weight matrix of shape (5, 4)
                     b1 -- bias vector of shape (5, 1)
@@ -216,11 +225,11 @@ def forward_propagation_n(X, Y, parameters):
                     b2 -- bias vector of shape (3, 1)
                     W3 -- weight matrix of shape (1, 3)
                     b3 -- bias vector of shape (1, 1)
-    
+
     Returns:
     cost -- the cost function (logistic cost for one example)
     """
-    
+
     # retrieve parameters
     m = X.shape[1]
     W1 = parameters["W1"]
@@ -241,45 +250,45 @@ def forward_propagation_n(X, Y, parameters):
     # Cost
     logprobs = np.multiply(-np.log(A3),Y) + np.multiply(-np.log(1 - A3), 1 - Y)
     cost = 1./m * np.sum(logprobs)
-    
+
     cache = (Z1, A1, W1, b1, Z2, A2, W2, b2, Z3, A3, W3, b3)
-    
+
     return cost, cache
 
 def backward_propagation_n(X, Y, cache):
     """
     Implement the backward propagation presented in figure 2.
-    
+
     Arguments:
     X -- input datapoint, of shape (input size, 1)
     Y -- true "label"
     cache -- cache output from forward_propagation_n()
-    
+
     Returns:
     gradients -- A dictionary with the gradients of the cost with respect to each parameter, activation and pre-activation variables.
     """
-    
+
     m = X.shape[1]
     (Z1, A1, W1, b1, Z2, A2, W2, b2, Z3, A3, W3, b3) = cache
-    
+
     dZ3 = A3 - Y
     dW3 = 1./m * np.dot(dZ3, A2.T)
     db3 = 1./m * np.sum(dZ3, axis=1, keepdims = True)
-    
+
     dA2 = np.dot(W3.T, dZ3)
     dZ2 = np.multiply(dA2, np.int64(A2 > 0))
     dW2 = 1./m * np.dot(dZ2, A1.T) * 2
     db2 = 1./m * np.sum(dZ2, axis=1, keepdims = True)
-    
+
     dA1 = np.dot(W2.T, dZ2)
     dZ1 = np.multiply(dA1, np.int64(A1 > 0))
     dW1 = 1./m * np.dot(dZ1, X.T)
     db1 = 4./m * np.sum(dZ1, axis=1, keepdims = True)
-    
+
     gradients = {"dZ3": dZ3, "dW3": dW3, "db3": db3,
                  "dA2": dA2, "dZ2": dZ2, "dW2": dW2, "db2": db2,
                  "dA1": dA1, "dZ1": dZ1, "dW1": dW1, "db1": db1}
-    
+
     return gradients
 
 
@@ -327,7 +336,26 @@ Make sure that dev/test sets come from the same distribution (training set havin
 distribution is a bit ok). To check what the bias and variance is on this, take a subset of
 the training set and call it the training-dev set and then compare the accuracy against both
 the training-dev set and the dev set.
-Inference tips: 
+Use Kaiming initialization for initializing weights
+  random.normal(shape)*sqrt(2/shape[0]) where shape[0] is input to layer
+Try different LR schedulers (CosineAnnealing, StepLR, CyclicLR etc). These are listed in 
+  https://pytorch.org/docs/stable/optim.html
+If NaNs encountered, try much lower LR, gradient clipping etc. for initial epoch till training stabilizes
+
+Last epoch does not necessarily give the best accuracy. Try the last few epochs
+Related to above, if reducing the LR (say, halving), might get better accuracy with using the epoch
+that gave the best accuracy as starting points
+
+
+Others:
+  https://blog.slavv.com/37-reasons-why-your-neural-network-is-not-working-4020854bd607
+  https://cs231n.github.io/neural-networks-2/
+  https://cs231n.github.io/neural-networks-3/
+  https://towardsdatascience.com/a-bunch-of-tips-and-tricks-for-training-deep-neural-networks-3ca24c31ddc8
+  http://image-net.org/tutorials/cvpr2015/getting_started.pdf
+
+
+Inference tips:
   Train an ensamble of networks and then take the average of their outputs
   Do multi-crop (10 crop)
 
@@ -360,7 +388,7 @@ that has the highest confidence
 At the end of these two, there would be around 10 predictions out of possible 845
 Anchors refer to the 5 box sizes (square, long wide etc.) which map to each detector
 Thus there will be as many anchors as detectors and detectors map 1:1 to anchors
-Classification with localization is the scenario where there is only one object in the image and 
+Classification with localization is the scenario where there is only one object in the image and
 we need to detect that
 Landmark Detection:
 Detect multiple points of interest, e.g. corner of eyes, face, mouth, person's joints etc
@@ -384,7 +412,7 @@ Yolov3 has three detectors/anchorboxes
 Grids are called as cells in the paper. Similarly anchors == bounding boxes
 Predicts bounding boxes, class probabilities and objectness (likelyhood that there is an object in the box)
 Bounding boxes:
-The network predicts 4 coordinates, tx, ty, tw, th. 
+The network predicts 4 coordinates, tx, ty, tw, th.
 If the cell (grid) offset is at cx, cy and the bounding box (anchor) priors (default shapes) are ph and pw, then
 bx = sigma(tx) + cx
 by = sigma(ty) + cy
@@ -402,5 +430,26 @@ Feature map from two layers before first grid (13x13) taken and then upsampled b
 even earlier in the network. Gives more semantic info from upsampled feature map and finer grain from earlier feature map. Add a
 few convolution to get a prediction twice the size. Repeat one more time for third Yolo layer input
 
+R-CNN:
+  Run a segmentation algorithm and then run CNN only on those proposed regions
+  Fast R-CNN uses convolution implementation of sliding window
+  Faster R-CNN uses convolution to propose regions
+
+RNNs
+  Useful for sequence of data like text, music, speech etc.
+  Same set of weights reused, but activations of previous step used to calculate activations of next step
+  First set of activations usually set as zero
+  One problem with RNNs is that it looks at information only earlier in the sequence and not later
+  To avoid this issue Bi-directional RNNs look at data later in the sequence to decide what to predict
+  fprop:
+    a<1> = g(Waa*A0 + WaxX1 + Ba)
+    y<1> = g(WyaA1 + By)
+  Backpropagation:
+    Bprop happens in the revers and is called backpropagation through time (going in the reverse direction)
+  RNNs could be one-to-one, one-to-many (music generation), many-to-one (sentiment analysis), many-to-many (language translation)
+  RNNs may have vanishing gradient problem where time steps may be 100 or 1000 and so gradients at start of time
+  may not be able to influence gradients at start of the timesteps. One way of solving that is by using GRUs
+GRU: Gated Recurrent units
+  Has a Gate (sigmoid based) that tell whether to update the value depending on whether the gate was one or zero
 
 
