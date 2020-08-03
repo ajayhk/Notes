@@ -408,6 +408,55 @@ Map can take a unary function and collection of arguments and retuns an iterator
 for i in map(abs, [1, -2, 3, -4]):
     print(i)
 
+Decorators:
+https://python-3-patterns-idioms-test.readthedocs.io/en/latest/PythonDecorators.html
+Decorators allow you to inject or modify code in functions or classes.
+@myDecorator
+def aFunction():
+    print("inside aFunction")
+When the compiler passes over this code, aFunction() is compiled and the resulting function object
+is passed to the myDecorator code, which does something to produce a function-like object that is
+then substituted for the original aFunction()
+The decorator can be either a class or a function. If the decorator is a class, the class should have
+implemented __call__ which is what gets called instead of the function. To execute the function,
+you can call the function inside the __call__ routine
+If the decorator is a function, then define a new function inside the decorator that returns the new
+function. Before return, do the pre-orig-function calls, call the orig function, and then post-orig call
+
+# PythonDecorators/entry_exit_class.py
+class entry_exit(object):
+    def __init__(self, f):
+        self.f = f # The function is saved here so that it can be called in the __call__
+    def __call__(self):
+        print("Entering", self.f.__name__)
+        self.f()
+        print("Exited", self.f.__name__)
+
+@entry_exit
+def func1():
+    print("inside func1()")
+
+@entry_exit
+def func2():
+    print("inside func2()")
+
+func1()
+func2()
+
+Result:
+Entering func1
+inside func1()
+Exited func1
+Entering func2
+inside func2()
+Exited func2
+
+If the original function has arguments, they can be passed to the decorator's call function if
+the decorator does not have/take arguments. In that case,
+
+If the decorator has arguments, then the original function is not passed to the constructor
+
+
 Odds and ends
 Sometimes it is useful to have a data type similar to the Pascal “record” or C “struct”, bundling together a few named data items. An empty class definition will do nicely:
 
