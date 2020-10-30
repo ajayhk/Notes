@@ -153,13 +153,18 @@ Softmax:
   Used as activation on last layer of multiclass classification problem. Gives probabilities that add to one
   t = e^Z; A = t/np.sum(t)
   Different from hard max where only one value has output 1 and everything else is 0
-Precision:
+Precision (mAP and AP):
   Of all the images predicted, how many (what percent) are correction
   Precision = TP / (TP + FP)
-Recall:
+Recall (mAR and AR):
   Of all the correct images, how many (what percent) were predicted
   Recall = TP / (TP + FN)
 F1 score:
+  The F-score or F-measure is a measure of a test's accuracy. It is calculated from the precision and recall
+  of the test, where the precision is the number of correctly identified positive results divided by the number
+  of all positive results, including those not identified correctly, and the recall is the number of correctly
+  identified positive results divided by the number of all samples that should have been identified as positive.
+  The F1 score is the harmonic mean of the precision and recall.
   Harmonic mean of precision and recall. 2/(1/Precision + 1/Recall)
 IOU (Intersection over Union) aka Jaccard index:
   Area of overlap / Area of union
